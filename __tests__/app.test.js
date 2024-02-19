@@ -12,7 +12,7 @@ beforeEach(() => {
 afterAll(() => db.end());
 
 describe('/api/topics', () => {
-    test('GET:200 sends an array of topic objects ', () => {
+    test('GET:200 sends an array of topic objects', () => {
         return request(app)
             .get('/api/topics')
             .expect(200)
@@ -44,7 +44,25 @@ describe('/api', () => {
             .get('/api')
             .expect(200)
             .then((response) => {
-                expect(response.body.endpoints).toEqual(apiData)
+                expect(response.body.endpoints).toEqual(apiData);
+            });
+    });
+});
+
+describe('/api/articles/:article_id', () => {
+    test('GET:200 sends a single article to the client', () => {
+        return request(app)
+            .get('/api/articles/3')
+            .expect(200)
+            .then((response) => {
+                const article = response.body.article;
+                expect(article.title).toBe('Eight pug gifs that remind me of mitch');
+                expect(article.topic).toBe('mitch');
+                expect(article.author).toBe('icellusedkars');
+                expect(article.body).toBe('some gifs');
+                expect(article.created_at).toBe('2020-11-03T09:12:00.000Z');
+                expect(article.votes).toBe(0);
+                expect(article.article_img_url).toBe('https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700');
             });
     });
 });
