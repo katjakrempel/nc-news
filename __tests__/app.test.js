@@ -67,10 +67,20 @@ describe('/api/articles/:article_id', () => {
     });
     test('GET:404 sends error message when given a valid but non-existent article id', () => {
         return request(app)
-        .get('/api/articles/99')
-        .expect(404)
-        .then((response) => {
-            expect(response.body.msg).toBe('page not found');
-        })
+            .get('/api/articles/99')
+            .expect(404)
+            .then((response) => {
+                expect(response.body.msg).toBe('page not found');
+            });
     });
+    test('GET:400 sends error message when given an invalid article id', () => {
+        return request(app)
+            .get('/api/articles/not-a-number')
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe('bad request');
+            });
+
+    });
+
 });

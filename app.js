@@ -13,6 +13,14 @@ app.get('/api/articles/:article_id', getArticleById);
 
 
 app.use((err, request, response, next) => {
+    if (err.code === '22P02') {
+        response.status(400).send({ msg: 'bad request' })
+    } else {
+        next(err);
+    }
+})
+
+app.use((err, request, response, next) => {
     if (err.status && err.msg) {
         response.status(err.status).send({ msg: err.msg });
     } else {
@@ -23,5 +31,6 @@ app.use((err, request, response, next) => {
 app.all('/*', (request, response, next) => {
     response.status(404).send({ msg: 'path not found' });
 });
+
 
 module.exports = app;
