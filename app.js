@@ -11,6 +11,15 @@ app.get('/api', getEndpoints);
 
 app.get('/api/articles/:article_id', getArticleById);
 
+
+app.use((err, request, response, next) => {
+    if (err.status && err.msg) {
+        response.status(err.status).send({ msg: err.msg });
+    } else {
+        next(err);
+    }
+})
+
 app.all('/*', (request, response, next) => {
     response.status(404).send({ msg: 'path not found' });
 });

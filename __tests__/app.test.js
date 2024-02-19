@@ -65,4 +65,12 @@ describe('/api/articles/:article_id', () => {
                 expect(article.article_img_url).toBe('https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700');
             });
     });
+    test('GET:404 sends error message when given a valid but non-existent article id', () => {
+        return request(app)
+        .get('/api/articles/99')
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('page not found');
+        })
+    });
 });
