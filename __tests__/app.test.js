@@ -18,9 +18,21 @@ describe('/api/topics', () => {
             .then((response) => {
                 expect(response.body.topics.length).toBe(3);
                 response.body.topics.forEach((topic) => {
-                    expect(typeof topic.slug).toBe('string')
-                    expect(typeof topic.description).toBe('string')
+                    expect(typeof topic.slug).toBe('string');
+                    expect(typeof topic.description).toBe('string');
                 });
+            });
+    });
+});
+
+describe('path not found', () => {
+    test('GET:404 returns error for invalid route', () => {
+        return request(app)
+            .get('/notvalid')
+            .expect(404)
+            .then((response) => {
+                const error = response.body;
+                expect(error.msg).toBe('path not found');
             });
     });
 });
