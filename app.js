@@ -11,6 +11,10 @@ app.get('/api', getEndpoints);
 
 app.get('/api/articles/:article_id', getArticleById);
 
+app.all('/*', (request, response, next) => {
+    response.status(404).send({ msg: 'path not found' });
+});
+
 
 app.use((err, request, response, next) => {
     if (err.code === '22P02') {
@@ -28,9 +32,9 @@ app.use((err, request, response, next) => {
     }
 })
 
-app.all('/*', (request, response, next) => {
-    response.status(404).send({ msg: 'path not found' });
-});
+app.use((err, request, response, next) => {
+    response.status(500).send({ msg: 'internal server error' });
+})
 
 
 module.exports = app;
