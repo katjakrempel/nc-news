@@ -1,3 +1,4 @@
+const { articleData } = require('../db/data/test-data');
 const { selectArticleById, selectArticles, selectCommentsByArticleId } = require('../models/articles-models');
 
 exports.getArticleById = (req, res, next) => {
@@ -17,9 +18,13 @@ exports.getArticles = (req, res, next) => {
 
 exports.getCommentsByArticleId = (req, res, next) => {
     const { article_id } = req.params;
-    selectCommentsByArticleId(article_id).then((comments) => {
-        res.status(200).send({ comments });
+    const promises = [
+        selectCommentsByArticleId(article_id),
+        selectArticleById(article_id)
+    ];
+    Promise.all(promises).then((promiseResolutions) => {
+        res.status(200).send({ comments: promiseResolutions[0] });
     }).catch((err) => {
         next(err);
-    })
+    });
 };

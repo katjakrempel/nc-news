@@ -151,10 +151,19 @@ describe('/api/articles/:article_id/comments', () => {
     });
     test('GET:400 sends error message when given invalid article id', () => {
         return request(app)
-        .get('/api/articles/not-a-number/comments')
-        .expect(400)
-        .then((response) => {
-            expect(response.body.msg).toBe('bad request');
-        });
+            .get('/api/articles/not-a-number/comments')
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe('bad request');
+            });
+    });
+    test('GET:200 sends empty array when given article id that exists but has no comments', () => {
+        return request(app)
+            .get('/api/articles/2/comments')
+            .expect(200)
+            .then((response) => {
+                const { comments } = response.body;
+                expect(comments.length).toBe(0);
+            });
     });
 });
