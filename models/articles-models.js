@@ -29,3 +29,11 @@ exports.selectCommentsByArticleId = (article_id) => {
         })
 };
 
+exports.insertComment = (article_id, newComment) => {
+    const { username, body } = newComment;
+    return db.query(`INSERT INTO comments (body, article_id, author, votes) VALUES ($1, $2, $3, $4)
+    RETURNING *;`, [body, article_id, username, 0])
+        .then((result) => {
+            return result.rows[0];
+        })
+}

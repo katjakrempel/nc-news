@@ -166,4 +166,22 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(comments.length).toBe(0);
             });
     });
+    test('POST:201 inserts comment into db and sends posted comment back to client', () => {
+        const newComment = {
+            username: 'rogersop',
+            body: 'very nice laptop'
+        };
+        return request(app)
+            .post('/api/articles/2/comments')
+            .send(newComment)
+            .expect(201)
+            .then((response) => {
+                const { comment } = response.body;
+                expect(comment.comment_id).toBe(19);
+                expect(comment.author).toBe('rogersop');
+                expect(comment.votes).toBe(0);
+                expect(comment.body).toBe('very nice laptop');
+                expect(comment.article_id).toBe(2);
+            });
+    });
 });
