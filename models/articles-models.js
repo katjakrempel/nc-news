@@ -17,8 +17,18 @@ exports.selectArticles = () => {
     ON a.article_id = c.article_id
     GROUP BY 1,2,3,4,5,6,7
     ORDER BY a.created_at DESC;`)
-    .then((result) => {
-        return result.rows;
-    })
+        .then((result) => {
+            return result.rows;
+        })
+};
+
+exports.selectCommentsByArticleId = (article_id) => {
+    return db.query(`SELECT * FROM comments WHERE article_id=$1 ORDER BY created_at DESC;`, [article_id])
+        .then((result) => {
+            if (result.rows.length === 0) {
+                return Promise.reject({ status: 404, msg: 'page not found' });
+            }
+            return result.rows;
+        })
 };
 
