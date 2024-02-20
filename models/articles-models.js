@@ -8,7 +8,7 @@ exports.selectArticleById = (article_id) => {
             }
             return result.rows[0];
         })
-}
+};
 
 exports.selectArticles = () => {
     return db.query(`SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, COUNT(c.*)::int AS comment_count
@@ -20,5 +20,5 @@ exports.selectArticles = () => {
     .then((result) => {
         return result.rows;
     })
-}
+};
 
