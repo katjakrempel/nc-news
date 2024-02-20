@@ -8,4 +8,17 @@ exports.selectArticleById = (article_id) => {
             }
             return result.rows[0];
         })
-}
+};
+
+exports.selectArticles = () => {
+    return db.query(`SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, COUNT(c.*)::int AS comment_count
+    FROM articles a
+    LEFT JOIN comments c
+    ON a.article_id = c.article_id
+    GROUP BY 1,2,3,4,5,6,7
+    ORDER BY a.created_at DESC;`)
+    .then((result) => {
+        return result.rows;
+    })
+};
+
