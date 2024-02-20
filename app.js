@@ -1,6 +1,6 @@
 const express = require('express');
 const { getTopics } = require('./controllers/topics-controllers');
-const { getArticleById } = require('./controllers/articles-controllers');
+const { getArticleById, getArticles } = require('./controllers/articles-controllers');
 const { getEndpoints } = require('./controllers/api-controllers');
 const app = express();
 
@@ -10,6 +10,8 @@ app.get('/api/topics', getTopics);
 app.get('/api', getEndpoints);
 
 app.get('/api/articles/:article_id', getArticleById);
+
+app.get('/api/articles/', getArticles);
 
 app.all('/*', (request, response, next) => {
     response.status(404).send({ msg: 'path not found' });
@@ -33,6 +35,7 @@ app.use((err, request, response, next) => {
 })
 
 app.use((err, request, response, next) => {
+    console.log(err);
     response.status(500).send({ msg: 'internal server error' });
 })
 
