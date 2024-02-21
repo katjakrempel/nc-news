@@ -1,5 +1,5 @@
 const { articleData } = require('../db/data/test-data');
-const { selectArticleById, selectArticles, selectCommentsByArticleId, insertComment } = require('../models/articles-models');
+const { selectArticleById, selectArticles, selectCommentsByArticleId, insertComment, updateArticle } = require('../models/articles-models');
 
 exports.getArticleById = (req, res, next) => {
     const { article_id } = req.params;
@@ -38,3 +38,11 @@ exports.postComment = (req, res, next) => {
         next(err);
     });
 };
+
+exports.patchArticle = (req, res, next) => {
+    const { article_id } = req.params;
+    const updatedArticle = req.body;
+    updateArticle(article_id, updatedArticle).then((article) => {
+        res.status(200).send({ article });
+    });
+}

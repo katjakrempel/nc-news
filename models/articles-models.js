@@ -36,4 +36,18 @@ exports.insertComment = (article_id, newComment) => {
         .then((result) => {
             return result.rows[0];
         })
-}
+};
+
+exports.updateArticle = (article_id, updatedArticle) => {
+    const { inc_votes } = updatedArticle;
+    return db.query(`UPDATE articles 
+                    SET votes =
+                        CASE WHEN votes + $1 > 0 THEN votes + $1
+                        ELSE 0
+                        END
+                    WHERE article_id = $2 RETURNING *;`, [inc_votes, article_id])
+        .then((result) => {
+            return result.rows[0];
+        })
+
+};

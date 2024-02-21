@@ -11,6 +11,7 @@ beforeEach(() => {
 });
 afterAll(() => db.end());
 
+
 describe('/api/topics', () => {
     test('GET:200 sends an array of topic objects', () => {
         return request(app)
@@ -79,6 +80,28 @@ describe('/api/articles/:article_id', () => {
             .expect(400)
             .then((response) => {
                 expect(response.body.msg).toBe('bad request');
+            });
+    });
+    test('PATCH:200 updates article (increments votes) in db and sends updated article back to client', () => {
+        const updatedArticle = { inc_votes: 2 };
+        return request(app)
+            .patch('/api/articles/3')
+            .send(updatedArticle)
+            .expect(200)
+            .then((response) => {
+                const { article } = response.body;
+                expect(article.votes).toBe(2);
+            });
+    });
+    test('PATCH:200 does not decrement votes to value below 0 ', () => {
+        const updatedArticle = { inc_votes: -20 };
+        return request(app)
+            .patch('/api/articles/3')
+            .send(updatedArticle)
+            .expect(200)
+            .then((response) => {
+                const { article } = response.body;
+                expect(article.votes).toBe(0);
             });
     });
 });
