@@ -93,7 +93,7 @@ describe('/api/articles/:article_id', () => {
                 expect(article.votes).toBe(2);
             });
     });
-    test('PATCH:200 does not decrement votes to value below 0 ', () => {
+    test('PATCH:200 does not decrement votes to value below 0', () => {
         const updatedArticle = { inc_votes: -20 };
         return request(app)
             .patch('/api/articles/3')
@@ -102,6 +102,36 @@ describe('/api/articles/:article_id', () => {
             .then((response) => {
                 const { article } = response.body;
                 expect(article.votes).toBe(0);
+            });
+    });
+    test('PATCH:400 sends error message when given a valid but non-existent article id', () => {
+        const updatedArticle = { inc_votes: 2 };
+        return request(app)
+            .patch('/api/articles/99')
+            .send(updatedArticle)
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe('bad request');
+            });
+    });
+    test('PATCH:400 sends error message when given an invalid article id', () => {
+        const updatedArticle = { inc_votes: 2 };
+        return request(app)
+            .patch('/api/articles/not-a-number')
+            .send(updatedArticle)
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe('bad request');
+            });
+    });
+    test('PATCH:400 sends error message when request body contains value of incorrect type', () => {
+        const updatedArticle = { inc_votes: 'not-a-number' };
+        return request(app)
+            .patch('/api/articles/3')
+            .send(updatedArticle)
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe('bad request');
             });
     });
 });

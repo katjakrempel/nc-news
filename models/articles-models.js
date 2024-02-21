@@ -47,6 +47,9 @@ exports.updateArticle = (article_id, updatedArticle) => {
                         END
                     WHERE article_id = $2 RETURNING *;`, [inc_votes, article_id])
         .then((result) => {
+            if (result.rows.length === 0) {
+                return Promise.reject({ status: 400, msg: 'bad request' });
+            }
             return result.rows[0];
         })
 
