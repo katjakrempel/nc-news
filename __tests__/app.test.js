@@ -178,10 +178,49 @@ describe('/api/articles/:article_id/comments', () => {
             .then((response) => {
                 const { comment } = response.body;
                 expect(comment.comment_id).toBe(19);
-                expect(comment.author).toBe('rogersop');
-                expect(comment.votes).toBe(0);
                 expect(comment.body).toBe('very nice laptop');
                 expect(comment.article_id).toBe(2);
+                expect(comment.author).toBe('rogersop');
+                expect(comment.votes).toBe(0);
+                expect(typeof comment.created_at).toBe('string');
+            });
+    });
+    test('POST:400 sends error message when given valid but non-existent article id', () => {
+        const newComment = {
+            username: 'rogersop',
+            body: 'very nice laptop'
+        };
+        return request(app)
+            .post('/api/articles/99/comments')
+            .send(newComment)
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe('bad request');
+            });
+    });
+    test('POST:400 sends error message when given invalid article id', () => {
+        const newComment = {
+            username: 'rogersop',
+            body: 'very nice laptop'
+        };
+        return request(app)
+            .post('/api/articles/not-a-number/comments')
+            .send(newComment)
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe('bad request');
+            });
+    });
+    test('POST:400 sends error message when request body is missing required fields', () => {
+        const newComment = {
+            body: 'very nice laptop'
+        };
+        return request(app)
+            .post('/api/articles/2/comments')
+            .send(newComment)
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe('bad request');
             });
     });
 });

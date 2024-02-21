@@ -23,12 +23,13 @@ app.all('/*', (request, response, next) => {
 
 
 app.use((err, request, response, next) => {
-    if (err.code === '22P02') {
+    const errorCodes = ['22P02', '23503', '23502'];
+    if (errorCodes.includes(err.code)) {
         response.status(400).send({ msg: 'bad request' })
     } else {
         next(err);
     }
-})
+});
 
 app.use((err, request, response, next) => {
     if (err.status && err.msg) {
@@ -36,12 +37,12 @@ app.use((err, request, response, next) => {
     } else {
         next(err);
     }
-})
+});
 
 app.use((err, request, response, next) => {
     console.log(err);
     response.status(500).send({ msg: 'internal server error' });
-})
+});
 
 
 module.exports = app;
