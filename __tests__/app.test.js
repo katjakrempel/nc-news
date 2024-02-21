@@ -277,3 +277,12 @@ describe('/api/articles/:article_id/comments', () => {
             });
     });
 });
+
+describe('/api/comments/:comment_id', () => {
+    test('DELETE:204 deletes specified comment from db and sends no body back', () => {
+        return request(app)
+            .delete('/api/comments/7')
+            .expect(204)
+    });
+});
+
