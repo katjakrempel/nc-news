@@ -284,5 +284,21 @@ describe('/api/comments/:comment_id', () => {
             .delete('/api/comments/7')
             .expect(204)
     });
+    test('DELETE:404 sends error message when given non-existent comment id ', () => {
+        return request(app)
+        .delete('/api/comments/1234')
+        .expect(404)
+        .then((response)=> {
+            expect(response.body.msg).toBe('not found');
+        })
+    });
+    test('DELETE:400 sends error message when given invalid comment id', () => {
+        return request(app)
+        .delete('/api/comments/not-a-number')
+        .expect(400)
+        .then((response)=> {
+            expect(response.body.msg).toBe('bad request');
+        });
+    });
 });
 
