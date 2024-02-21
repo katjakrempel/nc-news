@@ -1,5 +1,5 @@
 const { articleData } = require('../db/data/test-data');
-const { selectArticleById, selectArticles, selectCommentsByArticleId } = require('../models/articles-models');
+const { selectArticleById, selectArticles, selectCommentsByArticleId, insertComment } = require('../models/articles-models');
 
 exports.getArticleById = (req, res, next) => {
     const { article_id } = req.params;
@@ -24,6 +24,16 @@ exports.getCommentsByArticleId = (req, res, next) => {
     ];
     Promise.all(promises).then((promiseResolutions) => {
         res.status(200).send({ comments: promiseResolutions[0] });
+    }).catch((err) => {
+        next(err);
+    });
+};
+
+exports.postComment = (req, res, next) => {
+    const { article_id } = req.params;
+    const newComment = req.body;
+    insertComment(article_id, newComment).then((comment) => {
+        res.status(201).send({ comment });
     }).catch((err) => {
         next(err);
     });

@@ -1,9 +1,10 @@
 const express = require('express');
 const { getTopics } = require('./controllers/topics-controllers');
-const { getArticleById, getArticles, getCommentsByArticleId } = require('./controllers/articles-controllers');
+const { getArticleById, getArticles, getCommentsByArticleId, postComment } = require('./controllers/articles-controllers');
 const { getEndpoints } = require('./controllers/api-controllers');
 const app = express();
 
+app.use(express.json());
 
 app.get('/api/topics', getTopics);
 
@@ -14,6 +15,7 @@ app.get('/api/articles/:article_id', getArticleById);
 app.get('/api/articles/', getArticles);
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
+app.post('/api/articles/:article_id/comments', postComment);
 
 app.all('/*', (request, response, next) => {
     response.status(404).send({ msg: 'path not found' });
@@ -21,12 +23,13 @@ app.all('/*', (request, response, next) => {
 
 
 app.use((err, request, response, next) => {
-    if (err.code === '22P02') {
+    const errorCodes = ['22P02', '23503', '23502'];
+    if (errorCodes.includes(err.code)) {
         response.status(400).send({ msg: 'bad request' })
     } else {
         next(err);
     }
-})
+});
 
 app.use((err, request, response, next) => {
     if (err.status && err.msg) {
@@ -34,12 +37,12 @@ app.use((err, request, response, next) => {
     } else {
         next(err);
     }
-})
+});
 
 app.use((err, request, response, next) => {
     console.log(err);
     response.status(500).send({ msg: 'internal server error' });
-})
+});
 
 
 module.exports = app;
