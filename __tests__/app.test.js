@@ -136,7 +136,7 @@ describe('/api/articles/:article_id', () => {
     });
 });
 
-describe('/api/articles/', () => {
+describe('/api/articles', () => {
     test('GET:200 sends an array of article objects', () => {
         return request(app)
             .get('/api/articles/')
@@ -163,6 +163,36 @@ describe('/api/articles/', () => {
             .then((response) => {
                 const { articles } = response.body;
                 expect(articles).toBeSorted({ key: 'created_at', descending: true });
+            });
+    });
+    test('GET:200 should take optional topic query and respond with articles filtered by specified topic', () => {
+        return request(app)
+            .get('/api/articles?topic=cats')
+            .expect(200)
+            .then((response) => {
+                const { articles } = response.body;
+                expect(articles.length).toBe(1);
+                articles.forEach((article) => {
+                    expect(article.topic).toBe('cats');
+                })
+            });
+    });
+    test('GET:200 sends empty array when given topic that exists but has no associated articles', () => {
+        return request(app)
+            .get('/api/articles?topic=paper')
+            .expect(200)
+            .then((response) => {
+                const { articles } = response.body;
+                expect(articles.length).toBe(0);
+            });
+
+    });
+    test('GET:404 sends error message when given non-existent topic', () => {
+        return request(app)
+            .get('/api/articles?topic=no-such-topic')
+            .expect(404)
+            .then((response) => {
+                expect(response.body.msg).toBe('not found');
             });
     });
 });
@@ -286,19 +316,19 @@ describe('/api/comments/:comment_id', () => {
     });
     test('DELETE:404 sends error message when given non-existent comment id ', () => {
         return request(app)
-        .delete('/api/comments/1234')
-        .expect(404)
-        .then((response)=> {
-            expect(response.body.msg).toBe('not found');
-        })
+            .delete('/api/comments/1234')
+            .expect(404)
+            .then((response) => {
+                expect(response.body.msg).toBe('not found');
+            })
     });
     test('DELETE:400 sends error message when given invalid comment id', () => {
         return request(app)
-        .delete('/api/comments/not-a-number')
-        .expect(400)
-        .then((response)=> {
-            expect(response.body.msg).toBe('bad request');
-        });
+            .delete('/api/comments/not-a-number')
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe('bad request');
+            });
     });
 });
 
