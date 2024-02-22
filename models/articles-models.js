@@ -27,7 +27,7 @@ exports.selectArticles = (topic) => {
         queryVals.push(topic);
     };
 
-    sqlString += ` GROUP BY 1,2,3,4,5,6,7
+    sqlString += ` GROUP BY a.article_id
                 ORDER BY a.created_at DESC;`;
 
     return db.query(sqlString, queryVals)
