@@ -56,7 +56,7 @@ describe('/api/articles/:article_id', () => {
             .get('/api/articles/3')
             .expect(200)
             .then((response) => {
-                const article = response.body.article;
+                const { article } = response.body;
                 expect(article.title).toBe('Eight pug gifs that remind me of mitch');
                 expect(article.topic).toBe('mitch');
                 expect(article.author).toBe('icellusedkars');
@@ -64,6 +64,15 @@ describe('/api/articles/:article_id', () => {
                 expect(article.created_at).toBe('2020-11-03T09:12:00.000Z');
                 expect(article.votes).toBe(0);
                 expect(article.article_img_url).toBe('https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700');
+            });
+    });
+    test('GET:200 sends a single article including comment count', () => {
+        return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then((response) => {
+                const { article } = response.body;
+                expect(article.comment_count).toBe(11);
             });
     });
     test('GET:404 sends error message when given a valid but non-existent article id', () => {
