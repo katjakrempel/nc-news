@@ -172,7 +172,18 @@ describe('/api/articles', () => {
             .then((response) => {
                 const { articles } = response.body;
                 expect(articles.length).toBe(1);
+                articles.forEach((article)=> {
+                    expect(article.topic).toBe('cats');
+                })
             });
+    });
+    test('GET:404 sends error message for query with non-existent topic', () => {
+        return request(app)
+        .get('/api/articles?topic=no-such-topic')
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('not found');
+        });
     });
 });
 
