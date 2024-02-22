@@ -10,16 +10,25 @@ exports.selectArticleById = (article_id) => {
         })
 };
 
-exports.selectArticles = () => {
-    return db.query(`SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, COUNT(c.*)::int AS comment_count
+exports.selectArticles = (topic) => {
+    let sqlString = `SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, COUNT(c.*)::int AS comment_count
     FROM articles a
     LEFT JOIN comments c
-    ON a.article_id = c.article_id
-    GROUP BY 1,2,3,4,5,6,7
-    ORDER BY a.created_at DESC;`)
+    ON a.article_id = c.article_id`;
+    const queryVals = [];
+
+    if (topic) {
+        sqlString += ` WHERE a.topic=$1`;
+        queryVals.push(topic);
+    };
+
+    sqlString += ` GROUP BY 1,2,3,4,5,6,7
+                ORDER BY a.created_at DESC;`;
+
+    return db.query(sqlString, queryVals)
         .then((result) => {
             return result.rows;
-        })
+        });
 };
 
 exports.selectCommentsByArticleId = (article_id) => {
