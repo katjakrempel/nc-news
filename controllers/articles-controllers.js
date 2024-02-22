@@ -1,5 +1,6 @@
 const { articleData } = require('../db/data/test-data');
 const { selectArticleById, selectArticles, selectCommentsByArticleId, insertComment, updateArticle } = require('../models/articles-models');
+const { checkTopicExists } = require('../models/topics-models');
 
 exports.getArticleById = (req, res, next) => {
     const { article_id } = req.params;
@@ -12,8 +13,14 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
     const { topic } = req.query;
-    selectArticles(topic).then((articles) => {
-        res.status(200).send({ articles });
+    const promises = [selectArticles(topic)];
+
+    if (topic) {
+        promises.push(checkTopicExists(topic));
+    }
+
+    Promise.all(promises).then((promiseResolutions) => {
+        res.status(200).send({ articles: promiseResolutions[0] })
     }).catch((err) => {
         next(err);
     });

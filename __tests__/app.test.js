@@ -172,18 +172,28 @@ describe('/api/articles', () => {
             .then((response) => {
                 const { articles } = response.body;
                 expect(articles.length).toBe(1);
-                articles.forEach((article)=> {
+                articles.forEach((article) => {
                     expect(article.topic).toBe('cats');
                 })
             });
     });
-    test('GET:404 sends error message for query with non-existent topic', () => {
+    test('GET:200 sends empty array when given topic that exists but has no associated articles', () => {
         return request(app)
-        .get('/api/articles?topic=no-such-topic')
-        .expect(404)
-        .then((response) => {
-            expect(response.body.msg).toBe('not found');
-        });
+            .get('/api/articles?topic=paper')
+            .expect(200)
+            .then((response) => {
+                const { articles } = response.body;
+                expect(articles.length).toBe(0);
+            });
+
+    });
+    test('GET:404 sends error message when given non-existent topic', () => {
+        return request(app)
+            .get('/api/articles?topic=no-such-topic')
+            .expect(404)
+            .then((response) => {
+                expect(response.body.msg).toBe('not found');
+            });
     });
 });
 
