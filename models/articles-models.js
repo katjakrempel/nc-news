@@ -12,7 +12,7 @@ exports.selectArticleById = (article_id) => {
                 return Promise.reject({ status: 404, msg: 'page not found' });
             }
             return result.rows[0];
-        })
+        });
 };
 
 exports.selectArticles = (topic) => {

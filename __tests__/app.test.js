@@ -73,7 +73,7 @@ describe('/api/articles/:article_id', () => {
             .then((response) => {
                 const { article } = response.body;
                 expect(article.comment_count).toBe(11);
-            });''
+            });
     });
     test('GET:404 sends error message when given a valid but non-existent article id', () => {
         return request(app)
