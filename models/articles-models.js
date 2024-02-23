@@ -6,7 +6,7 @@ exports.selectArticleById = (article_id) => {
     LEFT JOIN comments c
     ON a.article_id = c.article_id
     WHERE a.article_id=$1
-    GROUP BY 1,2,3,4,5,6,7,8`, [article_id])
+    GROUP BY a.article_id`, [article_id])
         .then((result) => {
             if (result.rows.length === 0) {
                 return Promise.reject({ status: 404, msg: 'page not found' });
