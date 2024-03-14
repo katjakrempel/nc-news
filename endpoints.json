@@ -46,7 +46,7 @@
   "PATCH /api/articles/:article_id/": {
     "description": "updates an article by article_id and responds with the updated article",
     "queries": [],
-    "exampleRequest" : {"inc_votes": 2},
+    "exampleRequest": { "inc_votes": 2 },
     "exampleResponse": {
       "article": {
         "title": "Seafood substitutions are increasing",
@@ -55,8 +55,7 @@
         "body": "Text from the article..",
         "created_at": "2018-05-30T15:59:13.341Z",
         "votes": 1,
-        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        "comment_count": 6
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
       }
     }
   },
@@ -79,6 +78,10 @@
   "POST /api/articles/:article_id/comments": {
     "description": "adds a comment for an article and responds with the posted comment",
     "queries": [],
+    "exampleRequest": {
+      "username": "rogersop",
+      "body": "very nice laptop"
+    },
     "exampleResponse": {
       "comment": {
         "comment_id": 19,
@@ -91,7 +94,7 @@
     }
   },
   "DELETE /api/comments/:comment_id": {
-    "description": "deletes specified comment and responds with no body back",
+    "description": "deletes specified comment by comment_id and responds with no body back",
     "queries": [],
     "exampleResponse": 204
   },
