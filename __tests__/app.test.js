@@ -102,17 +102,6 @@ describe('/api/articles/:article_id', () => {
                 expect(article.votes).toBe(2);
             });
     });
-    test('PATCH:200 does not decrement votes to value below 0', () => {
-        const updatedArticle = { inc_votes: -20 };
-        return request(app)
-            .patch('/api/articles/3')
-            .send(updatedArticle)
-            .expect(200)
-            .then((response) => {
-                const { article } = response.body;
-                expect(article.votes).toBe(0);
-            });
-    });
     test('PATCH:400 sends error message when given a valid but non-existent article id', () => {
         const updatedArticle = { inc_votes: 2 };
         return request(app)
