@@ -102,14 +102,14 @@ describe('/api/articles/:article_id', () => {
                 expect(article.votes).toBe(2);
             });
     });
-    test('PATCH:400 sends error message when given a valid but non-existent article id', () => {
+    test('PATCH:404 sends error message when given a valid but non-existent article id', () => {
         const updatedArticle = { inc_votes: 2 };
         return request(app)
             .patch('/api/articles/99')
             .send(updatedArticle)
-            .expect(400)
+            .expect(404)
             .then((response) => {
-                expect(response.body.msg).toBe('bad request');
+                expect(response.body.msg).toBe('not found');
             });
     });
     test('PATCH:400 sends error message when given an invalid article id', () => {
@@ -154,7 +154,7 @@ describe('/api/articles', () => {
                 });
             });
     });
-    test('array of articles should be sorted by date in descending order', () => {
+    test('GET:200 array of articles should be sorted by date in descending order', () => {
         return request(app)
             .get('/api/articles/')
             .expect(200)
@@ -213,7 +213,7 @@ describe('/api/articles/:article_id/comments', () => {
                 });
             });
     });
-    test('array of comments should be sorted by date in descending order', () => {
+    test('GET:200 array of comments should be sorted by date in descending order', () => {
         return request(app)
             .get('/api/articles/1/comments')
             .expect(200)
@@ -222,7 +222,7 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(comments).toBeSorted({ key: 'created_at', descending: true });
             });
     });
-    test('GET:404 sends error message when given valid but non-existent article id ', () => {
+    test('GET:404 sends error message when given valid but non-existent article id', () => {
         return request(app)
             .get('/api/articles/99/comments')
             .expect(404)
